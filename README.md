@@ -15,6 +15,7 @@
 
 ### `Shell`文件详细用法：
 **1、例如你要处理的图片文件放在桌面上的`images`文件中**
+
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/2.png)
 
 **2、把要作为图标的图片命名为icon**
