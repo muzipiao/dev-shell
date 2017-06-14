@@ -8,6 +8,7 @@
 
 #### **简要用法**：
 在Mac的终端中，cd打开图片文件夹—>拖入Shell文件到终端—>回车-->输入1或2或3或4即可进行对应操作,如图
+
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/1.png)
 
 ----------
@@ -19,9 +20,11 @@
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/2.png)
 
 **2、把要作为图标的图片命名为icon**
+
 ![图片展示图片源自网络](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/3.png)
 
 **3、需要在终端中用cd命令先进入此文件夹;终端输入cd空格(cd后面有一个空格)，然后拖入你桌面的`images`文件夹**
+
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/4.png)
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/5.png)
 
@@ -29,15 +32,20 @@
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/6.png)
 
 **5、显示界面如下，如果需要生成AppIcon图标，则输入数字1，回车**
+
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/7.png)
-**注意：**由于我在网上找到的是`JPG`图片，转为`PNG`图片后，`Alpha通道`颜色异常，所以有`CGColor`颜色警告，正常`PNG`图片处理是没有<...>部分的，有警告但不影响使用。
+
+**注意：**
+
+由于我在网上找到的是`JPG`图片，转为`PNG`图片后，`Alpha通道`颜色异常，所以有`CGColor`颜色警告，正常`PNG`图片处理是没有<...>部分的，有警告但不影响使用。
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/8.png)
 
 
 ----------
 
 
-###注意点
+### 注意点
+
 **1、生成AppIcon注意点(苹果官方要求`PNG`图)**
 
 - 图片名称需要为***icon.png***
