@@ -6,32 +6,31 @@
 - **批处理，一键将当前文件下所有图片生成对应的1x，2x，3x图片**
 - **批处理，一键将当前文件夹下所有图片转为PNG图片**
 
-
 #### **简要用法**：
 在Mac的终端中，cd打开图片文件夹—>拖入Shell文件到终端—>回车-->输入1或2或3或4即可进行对应操作,如图
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/1.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/1.png)
 
 ----------
 
 
 ### `Shell`文件详细用法：
 **1、例如你要处理的图片文件放在桌面上的`images`文件中**
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/2.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/2.png)
 
 **2、把要作为图标的图片命名为icon**
-![图片展示图片源自网络](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/3.png)
+![图片展示图片源自网络](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/3.png)
 
 **3、需要在终端中用cd命令先进入此文件夹;终端输入cd空格(cd后面有一个空格)，然后拖入你桌面的`images`文件夹**
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/4.png)
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/5.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/4.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/5.png)
 
 **4、同理，再拖入所用到的Shell文件，然后回车确认**
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/6.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/6.png)
 
 **5、显示界面如下，如果需要生成AppIcon图标，则输入数字1，回车**
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/7.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/7.png)
 **注意：**由于我在网上找到的是`JPG`图片，转为`PNG`图片后，`Alpha通道`颜色异常，所以有`CGColor`颜色警告，正常`PNG`图片处理是没有<...>部分的，有警告但不影响使用。
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/8.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/8.png)
 
 
 ----------
@@ -44,7 +43,7 @@
 - 尺寸目前包括40×40 58×58 60×60 80×80 87×87 120×120 180×180
 - 如果需要特殊尺寸，在下方的for循环处添加相应的数字即可
 
-![这里写图片描述](https://github.com/muzipiao/CreateiPhoneIconShell/blob/master/blogimages/9.png)
+![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/9.png)
 
 **2、生成App启动图片LaunchImage注意点(苹果官方要求PNG图)**
 >  iPhone屏幕尺寸一览
