@@ -1,0 +1,2 @@
+# CreateiPhoneIconShell
+Shell脚本工具，一键生成iOS需要的所有尺寸图标AppIcon；一键生成App启动图LaunchImage；批处理，一键将当前文件下所有图片生成对应的1x，2x，3x图片；批处理，一键将当前文件夹下所有图片转为PNG图片
