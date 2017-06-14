@@ -29,6 +29,7 @@
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/5.png)
 
 **4、同理，再拖入所用到的Shell文件，然后回车确认**
+
 ![这里写图片描述](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/6.png)
 
 **5、显示界面如下，如果需要生成AppIcon图标，则输入数字1，回车**
@@ -48,7 +49,7 @@
 
 **1、生成AppIcon注意点(苹果官方要求`PNG`图)**
 
-- 图片名称需要为***icon.png***
+- 图片名称需要为**icon.png**
 - 尺寸目前包括40×40 58×58 60×60 80×80 87×87 120×120 180×180
 - 如果需要特殊尺寸，在下方的for循环处添加相应的数字即可
 
