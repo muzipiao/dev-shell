@@ -3,19 +3,19 @@
 * 一键将.app文件转换为.ipa文件
 * 利用Shell脚本自动化打ipa包
 
-###**CreateiPhoneIconShell.sh脚本主要功能:**
+### **CreateiPhoneIconShell.sh脚本主要功能:**
 
 - 一键生成iOS需要的所有尺寸图标`AppIcon`
 - 一键生成App启动图`LaunchImage`
 - 批处理，一键将当前文件下所有图片生成对应的1x，2x，3x图片
 - 批处理，一键将当前文件夹下所有图片转为PNG图片
 
-###**AutoIPA.sh脚本主要功能:**
+### **AutoIPA.sh脚本主要功能:**
 
 - 利用Xcode开发App时，经常遇到只有开发用的交换证书，而无生产证书的情况；在Archive后，无法`Save for Ad Hoc Deployment`导出IPA包，分享给测试人员
 - 此脚本可将xx.app转换为xx.ipa更利于分发安装
 
-###**AutoArchive.sh脚本主要功能:**
+### **AutoArchive.sh脚本主要功能:**
 
 - 如果你项目想集成自动化测试和自动打包，需要用Shell脚本打包，但需要开发证书
 - 此脚本可将xxxx.xcodeproj项目，自动打包为ipa包
