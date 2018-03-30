@@ -1,26 +1,53 @@
-#注意：脚本目录和xxxx.xcodeproj要在同一个目录，如果放到其他目录，请自行修改脚本。
-#工程名字(Target名字)
-Project_Name="这里替换为你的项目名称"
-#配置环境，Release或者Debug
-Configuration="Release"
+#注意：ExportOptions.plist文件必须放到"工程名.xcodeproj"同级目录下，然后在终端中输入"cd 当前工程名.xcodeproj所在文件路径"，在拖入此Shell脚本即可。
+#工程名
+project_name="工程名(.xcodeproj文件名，不包含后缀)"
 
-#AdHoc版本的Bundle ID
-AdHocBundleID="xxx.xxx.xxx"
+#打包模式 Debug/Release
+development_mode="Release"
 
-# ADHOC
-#证书名#描述文件
-ADHOCCODE_SIGN_IDENTITY="这里替换为你的证书名称"
-ADHOCPROVISIONING_PROFILE_NAME="这里替换为你的描述文件名称"
+#scheme名
+scheme_name="编译生成的Target名称"
 
-#加载各个版本的plist文件
-ADHOCExportOptionsPlist="./Info.plist"
-ADHOCExportOptionsPlist=${ADHOCExportOptionsPlist}
+#plist文件所在路径，里面需要包含Bundle ID和描述文件名称
+exportOptionsPlistPath=./ExportOptions.plist
 
-#clean下，防止有缓存
-xcodebuild clean -xcodeproj ./$Project_Name.xcodeproj -configuration $Configuration -alltargets
+#导出.ipa文件所在路径
+exportFilePath=~/Desktop/$project_name-ipa
 
-#${varible:n1:n2}
-#xcodebuild archive -project 项目名称.xcodeproj -scheme 项目名称 -configuration Release -archivePath archive包存储路径 CODE_SIGN_IDENTITY=证书 PROVISIONING_PROFILE=描述文件UUID
-xcodebuild -project $Project_Name.xcodeproj -scheme ${Project_Name:0:3} -configuration $Configuration -archivePath build/$Project_Name-adhoc.xcarchive clean archive build  CODE_SIGN_IDENTITY="${ADHOCCODE_SIGN_IDENTITY}" PROVISIONING_PROFILE="${ADHOCPROVISIONING_PROFILE_NAME}" PRODUCT_BUNDLE_IDENTIFIER="${AdHocBundleID}"
-#xcodebuild -exportArchive -exportFormat ipa文件格式 -archivePath archive包存储路径 -exportPath ipa包存储路径  -exportProvisioningProfile 描述文件名称，同上，在这里就不需要添加了。
-xcodebuild -exportArchive -archivePath build/$Project_Name-adhoc.xcarchive -exportOptionsPlist $ADHOCExportOptionsPlist -exportPath ~/Desktop/$Project_Name-adhoc.ipa
+echo '*** 正在 清理工程 ***'
+xcodebuild \
+clean -configuration ${development_mode} -quiet  || exit
+echo '*** 清理完成 ***'
+
+
+echo '*** 正在 编译工程 For '${development_mode}
+xcodebuild \
+archive -project ${project_name}.xcodeproj \
+-scheme ${scheme_name} \
+-configuration ${development_mode} \
+-archivePath build/${project_name}.xcarchive -quiet  || exit
+echo '*** 编译完成 ***'
+
+
+echo '*** 正在 打包 ***'
+xcodebuild -exportArchive -archivePath build/${project_name}.xcarchive \
+-configuration ${development_mode} \
+-exportPath ${exportFilePath} \
+-exportOptionsPlist ${exportOptionsPlistPath} \
+-quiet || exit
+
+# 删除build包
+if [[ -d build ]]; then
+rm -rf build -r
+fi
+
+if [ -e $exportFilePath/$scheme_name.ipa ]; then
+echo "*** .ipa文件已导出 ***"
+cd ${exportFilePath}
+echo "*** 开始上传.ipa文件 ***"
+#此处上传分发应用
+echo "*** .ipa文件上传成功 ***"
+else
+echo "*** 创建.ipa文件失败 ***"
+fi
+echo '*** 打包完成 ***'
