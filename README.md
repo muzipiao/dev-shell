@@ -36,7 +36,7 @@
 
 ### 脚本用法示例之图片处理
 
-在 Mac 的终端中，cd 打开图片文件夹 —> 拖入 Shell 文件到终端 —> 回车 -> 输入 1 或 2 或 3 或 4 即可进行对应操作,如图：
+在 Mac 的终端中，将 Shell 文件放在图片同级目录下 —> 拖入 Shell 文件到终端 —> 回车 -> 输入 1 或 2 或 3 或 4 即可进行对应操作,如图：
 
 ![](https://github.com/muzipiao/GitHubImages/blob/master/CreateiPhoneIconShellBlogImages/1.png)
 
