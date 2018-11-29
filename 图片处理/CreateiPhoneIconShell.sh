@@ -107,8 +107,20 @@ case $1 in
     sips -z 1334 750 LaunchImage.png --out LaunchImageFolder/LaunchImage_1334x750.png
     ;;
 
+    "1792")
+    sips -z 1792 828 LaunchImage.png --out LaunchImageFolder/LaunchImage_1792x828.png
+    ;;
+
     "2208")
     sips -z 2208 1242 LaunchImage.png --out LaunchImageFolder/LaunchImage_2208x1242.png
+    ;;
+
+    "2436")
+    sips -z 2436 1125 LaunchImage.png --out LaunchImageFolder/LaunchImage_2436x1125.png
+    ;;
+
+    "2688")
+    sips -z 2688 1242 LaunchImage.png --out LaunchImageFolder/LaunchImage_2688x1242.png
     ;;
 esac
 }
@@ -134,7 +146,7 @@ then
         rm -rf IconFolder
         # 再创建CEB文件夹
         mkdir IconFolder
-        for size in 40 58 60 80 87 120 180
+        for size in 40 58 60 80 87 120 180 1024
         do
         IconWithSize $size
         done
@@ -146,7 +158,7 @@ then
         rm -rf LaunchImageFolder
         # 再创建CEB文件夹
         mkdir LaunchImageFolder
-        for size in 960 1136 1334 2208
+        for size in 960 1136 1334 1792 2208 2436 2688
         do
         LaunchWithSize $size
         done
