@@ -1,3 +1,8 @@
+# 打包脚本
+
+# 将此脚本放在后缀名为xcodeproj的文件同级目录下即可
+cd `dirname $0`
+
 #注意：ExportOptions.plist文件必须放到"工程名.xcodeproj"同级目录下，然后在终端中输入"cd 当前工程名.xcodeproj所在文件路径"，在拖入此Shell脚本即可。
 #工程名
 project_name="工程名(.xcodeproj文件名，不包含后缀)"
