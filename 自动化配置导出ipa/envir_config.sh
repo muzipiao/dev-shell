@@ -1,5 +1,5 @@
+#!/bin/sh
 # 项目配置
-
 # 用非默认版本Xcode打包请更改Xcode名称为对应XCode名称
 xcode_name="Xcode"
 # 请将CCCCC.xcodeproj替换为项目中后缀名为.xcodeproj的名称

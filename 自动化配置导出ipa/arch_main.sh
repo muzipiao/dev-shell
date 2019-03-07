@@ -1,5 +1,5 @@
+#!/bin/sh
 # 主Shell文件，配置文件填写完成后，将此文件拖入到终端即可。
-
 shell_path=$(
 	cd $(dirname $0)
 	pwd
@@ -21,11 +21,11 @@ method="$parameter"
 if [ -n "$method" ]; then
 	ip_file_name="config_"
 	if [ "$method" = "vali" ] || [ "$method" = "dev" ]; then
-		ip_file_name=""$shell_path"/arch_config/"$ip_file_name$method".txt"
+		ip_file_name="$shell_path/arch_config/"$ip_file_name$method".txt"
 	elif [ "$method" = "prod" ]; then
-		ip_file_name=""$shell_path"/arch_config/"$ip_file_name$method".txt"
+		ip_file_name="$shell_path/arch_config/"$ip_file_name$method".txt"
 		# 生产要求输入BundleVersion，存到bundle_version
-		if ["$bundle_prod_version" = ""]; then
+		if [ "$bundle_prod_version" = "" ]; then
 			# 如果生产版本未配置，则读取输入
 			ReadTargetBundleVersion
 		fi
