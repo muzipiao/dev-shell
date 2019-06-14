@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import filedialog, messagebox
-from platform import python_version
 import os, subprocess, imghdr
 
 
@@ -149,10 +148,7 @@ class ArchiveHandle:
         # 创建界面
         self.create_ui()
         # 判断 python 文件所在目录有无 shell 脚本
-        current_py_full_path = os.path.abspath(__file__)
-        current_py_dir = os.path.dirname(current_py_full_path)
-        shell_path = os.path.join(current_py_dir, "archive-method.sh")
-        if not os.path.isfile(shell_path):
+        if not os.path.isfile("archive-method.sh"):
             messagebox.showinfo(title='提示', message='请将 archive-method.sh 文件拖到 python 脚本所在目录')
             return
 
@@ -161,9 +157,7 @@ class ArchiveHandle:
 
     # 自动获取默认值
     def auto_defalut(self):
-        py_full_path = os.path.abspath(__file__)
-        py_dir = os.path.dirname(py_full_path)
-        config_str = "cd " + py_dir + " && . ./archive-method.sh && echo $g_project_name && echo $g_development_mode " \
+        config_str = ". ./archive-method.sh && echo $g_project_name && echo $g_development_mode " \
                      "&& echo $g_scheme_name && echo $g_export_options && echo $g_ipa_path"
         config_proc = subprocess.Popen(config_str, shell=True, stdout=subprocess.PIPE)
         config_out = config_proc.stdout.readlines()
@@ -199,8 +193,7 @@ class ArchiveHandle:
 
     # 在当前脚本目录下搜索
     def auto_read_proj(self):
-        py_full_path = os.path.abspath(__file__)
-        py_dir = os.path.dirname(py_full_path)
+        py_dir = os.getcwd()
         file_list = os.listdir(py_dir)
         for file_name in file_list:
             if file_name.endswith('.xcodeproj'):
@@ -216,15 +209,12 @@ class ArchiveHandle:
 
     # 自动读取 scheme
     def auto_read_scheme(self):
-        py_full_path = os.path.abspath(__file__)
-        py_dir = os.path.dirname(py_full_path)
-
         temp_proj_str = self._str_proj.get()
         temp_proj_dir = os.path.dirname(temp_proj_str)
         temp_proj_full_name = os.path.basename(temp_proj_str)
         proj_name, proj_ext = os.path.splitext(temp_proj_full_name)
 
-        scheme_str = "cd " + py_dir + " && . ./archive-method.sh " + "&& cd " + temp_proj_dir \
+        scheme_str = ". ./archive-method.sh " + "&& cd " + temp_proj_dir \
                      + " && FindScheme " + proj_name + " && echo $g_scheme_name"
         scheme_proc = subprocess.Popen(scheme_str, shell=True, stdout=subprocess.PIPE)
         scheme_out = scheme_proc.stdout.readlines()
@@ -239,18 +229,20 @@ class ArchiveHandle:
         pad_width = 35
         # 提示
         tip_label1 = Label(arch_frame, text="提示1：将 dev-shell.py，archive-method.sh 复制到与.xcodeproj同级目录下，\n"
-                                            "脚本会自动获取工程名称，scheme等信息。", fg='DarkCyan')
+                                            "            脚本会自动获取工程名称，scheme等信息。", fg='DarkCyan', justify='left')
         tip_label2 = Label(arch_frame, text="提示2：自动获取不正确请修改或配置 archive-method.sh 中全局变量。", fg='DarkCyan')
+        tip_label3 = Label(arch_frame, text="提示3：配置文件 ExportOptions.plist 不配置会自动检测创建。", fg='DarkCyan')
         tip_label1.grid(row=0, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
         tip_label2.grid(row=1, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
+        tip_label3.grid(row=2, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
 
         # 选择项目路径
         proj_path_label = Label(arch_frame, text='项目路径：', fg='black')
         proj_path_input = Entry(arch_frame, textvariable=self._str_proj, width=field_width)
-        proj_path_btn = Button(arch_frame, text='选择路径', command=self.proj_path_btn_click)
-        proj_path_label.grid(row=2, column=0, padx=5, pady=5)
-        proj_path_input.grid(row=2, column=1, padx=5, pady=5)
-        proj_path_btn.grid(row=2, column=2, padx=5, pady=5)
+        proj_path_btn = Button(arch_frame, text='选择文件', command=self.proj_path_btn_click)
+        proj_path_label.grid(row=10, column=0, padx=5, pady=5)
+        proj_path_input.grid(row=10, column=1, padx=5, pady=5)
+        proj_path_btn.grid(row=10, column=2, padx=5, pady=5)
         
         # 选择 Debug/Release
         mode_label = Label(arch_frame, text='编译模式：', fg='black')
@@ -259,36 +251,36 @@ class ArchiveHandle:
                                           value="Release", command=self.mode_radio_click)
         model_debug_radio = Radiobutton(mode_frame, variable=self._str_mode, text="Debug",
                                         value="Debug", command=self.mode_radio_click)
-        mode_label.grid(row=3, column=0, padx=5, pady=5)
-        mode_frame.grid(row=3, column=1, padx=5, pady=5, sticky=W)
+        mode_label.grid(row=11, column=0, padx=5, pady=5)
+        mode_frame.grid(row=11, column=1, padx=5, pady=5, sticky=W)
         model_release_radio.pack(anchor=W, side=LEFT)
         model_debug_radio.pack(anchor=W, side=LEFT)
 
         # scheme
         sche_label = Label(arch_frame, text='Scheme：', fg='black')
         sche_input = Entry(arch_frame, textvariable=self._str_sche, width=field_width)
-        sche_label.grid(row=4, column=0, padx=5, pady=5)
-        sche_input.grid(row=4, column=1, padx=5, pady=5)
+        sche_label.grid(row=12, column=0, padx=5, pady=5)
+        sche_input.grid(row=12, column=1, padx=5, pady=5)
 
         # ExportOptions.plist 所在路径
-        expo_path_label = Label(arch_frame, text='导出文件：', fg='black')
+        expo_path_label = Label(arch_frame, text='配置文件：', fg='black')
         expo_path_input = Entry(arch_frame, textvariable=self._str_expo, width=field_width)
-        expo_path_btn = Button(arch_frame, text='选择路径', command=self.expo_path_btn_click)
-        expo_path_label.grid(row=5, column=0, padx=5, pady=5)
-        expo_path_input.grid(row=5, column=1, padx=5, pady=5)
-        expo_path_btn.grid(row=5, column=2, padx=5, pady=5)
+        expo_path_btn = Button(arch_frame, text='选择文件', command=self.expo_path_btn_click)
+        expo_path_label.grid(row=13, column=0, padx=5, pady=5)
+        expo_path_input.grid(row=13, column=1, padx=5, pady=5)
+        expo_path_btn.grid(row=13, column=2, padx=5, pady=5)
 
         # ipa 导出路径
         ipa_path_label = Label(arch_frame, text='ipa路径：', fg='black')
         ipa_path_input = Entry(arch_frame, textvariable=self._str_ipap, width=field_width)
         ipa_path_btn = Button(arch_frame, text='选择路径', command=self.ipa_path_btn_click)
-        ipa_path_label.grid(row=6, column=0, padx=5, pady=5)
-        ipa_path_input.grid(row=6, column=1, padx=5, pady=5)
-        ipa_path_btn.grid(row=6, column=2, padx=5, pady=5)
+        ipa_path_label.grid(row=14, column=0, padx=5, pady=5)
+        ipa_path_input.grid(row=14, column=1, padx=5, pady=5)
+        ipa_path_btn.grid(row=14, column=2, padx=5, pady=5)
 
         # 提交按钮
         sure_btn = Button(arch_frame, text='确定', command=self.sure_btn_click)
-        sure_btn.grid(row=7, column=0, padx=pad_width, pady=pad_width, rowspan=2, columnspan=3, sticky=NSEW)
+        sure_btn.grid(row=15, column=0, padx=pad_width, pady=pad_width, rowspan=2, columnspan=3, sticky=NSEW)
 
     # 选择项目文件路径
     def proj_path_btn_click(self):
@@ -314,10 +306,7 @@ class ArchiveHandle:
 
     # 确认按钮
     def sure_btn_click(self):
-        py_full_path = os.path.abspath(__file__)
-        py_dir = os.path.dirname(py_full_path)
-        shell_path = os.path.join(py_dir, "archive-method.sh")
-        if not os.path.isfile(shell_path):
+        if not os.path.isfile("archive-method.sh"):
             messagebox.showinfo(title='提示', message='请将 archive-method.sh 文件拖到 python 脚本所在目录')
             return
 
@@ -331,25 +320,46 @@ class ArchiveHandle:
         # 判断工程路径是否存在
         if not os.path.isdir(proj_str):
             messagebox.showinfo(title='提示', message='工程文件不存在，请从新选择')
-
-        # 判断 ExportOptions.plist 是否存在，不存在创建
-        proj_path = os.path.dirname(proj_str)
-        expo_path = os.path.join(proj_path, expo_str)
-        if not os.path.isfile(expo_path):
-            os.system("cd " + py_dir + "&& . ./archive-method.sh && cd " + proj_path + "&& CreateExportOptionsPlist " + expo_str)
+            return
 
         # 获取文件名称
         proj_full_name = os.path.basename(proj_str)
+        proj_path = os.path.dirname(proj_str)
         proj_name, proj_ext = os.path.splitext(proj_full_name)
+
+        # 判断 ExportOptions.plist 输入框是否为空
+        if expo_str.strip() == "":
+            expo_str = "ExportOptions.plist"
+        # 判断项目目录下 ExportOptions.plist 是否存在，不存在创建
+        expo_path = os.path.join(proj_path, expo_str)
+        if not os.path.isfile(expo_path):
+            os.system(". ./archive-method.sh && cd " + proj_path + " && CreateExportOptionsPlist " + expo_str)
+
         # BuildWorkspace  BuildProj
         if proj_ext == ".xcworkspace":
-            os.system("cd " + py_dir + " && . ./archive-method.sh && cd " + proj_path + "&& BuildWorkspace " + proj_name + " "
-                      + mode_str + " " + sche_str + " " + expo_path + " " + ipaf_str)
+            arch_str = ". ./archive-method.sh && cd " + proj_path + " && BuildWorkspace " + proj_name + " " + mode_str \
+                       + " " + sche_str + " " + expo_path + " " + ipaf_str + " && echo $g_current_time"
         else:
-            os.system("cd " + py_dir + " && . ./archive-method.sh && cd " + proj_path + "&& BuildProj " + proj_name + " "
-                      + mode_str + " " + sche_str + " " + expo_path + " " + ipaf_str)
+            arch_str = ". ./archive-method.sh && cd " + proj_path + " && BuildProj " + proj_name + " " + mode_str \
+                       + " " + sche_str + " " + expo_path + " " + ipaf_str + " && echo $g_current_time"
 
-        messagebox.showinfo(title='提示', message='若打包成功，文件已经导出到' + ipaf_str + "目录下")
+        arch_proc = subprocess.Popen(arch_str, shell=True, stdout=subprocess.PIPE)
+        arch_out = arch_proc.stdout.readlines()
+        arch_time = arch_out[-1].decode('utf-8').strip()
+        # ipa_folder="$proj_ipa_path/$proj_scheme$g_current_time"
+        if len(arch_time) > 0:
+            path_abs_str = "cd " + ipaf_str + " && pwd"
+            path_abs_proc = subprocess.Popen(path_abs_str, shell=True, stdout=subprocess.PIPE)
+            path_abs_out = path_abs_proc.stdout.readlines()
+            path_abs = path_abs_out[-1].decode('utf-8').strip()
+            arch_ipa_path = sche_str + arch_time + "/" + sche_str + ".ipa"
+            # ipa 的绝对路径
+            arch_ipa_full_path = os.path.join(path_abs, arch_ipa_path)
+            if os.path.isfile(arch_ipa_full_path):
+                arch_ipa_dir = os.path.dirname(arch_ipa_full_path)
+                messagebox.showinfo(title='提示', message='打包成功，ipa 文件路径：\n' + arch_ipa_dir)
+            else:
+                messagebox.showinfo(title='提示', message='打包失败，请检查项目')
 
 
 # ----------------------- App 转 ipa -----------------------
@@ -373,9 +383,9 @@ class App:
         self._master = master
 
         # 创建标题Verdana 10 bold
-        img_label = Label(master, text='批量图片处理', font='宋体 26', fg='black', bg='White', justify='right')
-        arch_label = Label(master, text='自动打包', font='宋体 26', fg='black', bg='LightGray', justify='right')
-        ipa_label = Label(master, text='app 转 ipa', font='宋体 26', fg='black', bg='LightGray', justify='right')
+        img_label = Label(master, text='图片批处理', font='宋体 23', fg='black', bg='White', justify='right')
+        arch_label = Label(master, text='自动化打包', font='宋体 23', fg='black', bg='White', justify='right')
+        ipa_label = Label(master, text='.app 转 .ipa', font='宋体 23', fg='black', bg='White', justify='right')
 
         # 创建按钮
         img_app_icon_btn = Button(master, text="生成 AppIcon", command=self.create_icon_view, justify='left')
@@ -473,7 +483,7 @@ class App:
         ww = self._master.winfo_width()
 
         arch_win = Toplevel(self._master)
-        arch_win.title('图片处理')
+        arch_win.title('自动化打包')
         arch_win.geometry('%dx%d+%d+%d' % (ww, hh, xx, yy))
         ArchiveHandle(arch_win)
 
@@ -484,13 +494,17 @@ class App:
         ww = self._master.winfo_width()
 
         ipa_win = Toplevel(self._master)
-        ipa_win.title('图片处理')
+        ipa_win.title('app 转 ipa')
         ipa_win.geometry('%dx%d+%d+%d' % (ww, hh, xx, yy))
         AppToIpaHandle(ipa_win)
 
 
 # ----------------------- Main -----------------------
 if __name__ == '__main__':
+    py_full_path = os.path.abspath(__file__)
+    py_dir = os.path.dirname(py_full_path)
+    os.chdir(py_dir)
+
     root_win = Tk()
     root_win.title('Shell 功能列表')
     root_sw = root_win.winfo_screenwidth()
