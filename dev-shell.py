@@ -78,23 +78,23 @@ class ImgHandle:
                 return
 
         # 判断 shell 脚本是否存在
-        if not os.path.isfile('image-method.sh'):
-            messagebox.showinfo(title='提示', message='请将 image-method.sh 文件拖到 python 脚本所在目录')
+        if not os.path.isfile('image-shell.sh'):
+            messagebox.showinfo(title='提示', message='请将 image-shell.sh 文件拖到 python 脚本所在目录')
             return
         # 如果选择的是文件，则将文件名称和目录分开
         file_name = os.path.basename(dst_path)
         dir_path = os.path.dirname(dst_path)
         if self._handle_type == 'ka':
-            os.system('. ./image-method.sh ' + '&& cd ' + dir_path + ' && CreateIconImage ' + file_name)
+            os.system('. ./image-shell.sh python ' + '&& cd ' + dir_path + ' && CreateIconImage ' + file_name)
             messagebox.showinfo(title='提示', message='图片已经保存到图片目录下的 IconFolder 文件夹中')
         elif self._handle_type == 'kb':
-            os.system('. ./image-method.sh ' + '&& cd ' + dir_path + ' && CreateLaunchImage ' + file_name)
+            os.system('. ./image-shell.sh python ' + '&& cd ' + dir_path + ' && CreateLaunchImage ' + file_name)
             messagebox.showinfo(title='提示', message='图片已经保存到图片目录下的 LaunchImageFolder 文件夹中')
         elif self._handle_type == 'kc':
-            os.system('. ./image-method.sh ' + '&& cd ' + dst_path + ' && CreateXXImage')
+            os.system('. ./image-shell.sh python ' + '&& cd ' + dst_path + ' && CreateXXImage')
             messagebox.showinfo(title='提示', message='图片已经保存到图片目录下的 XXFolder 文件夹中')
         elif self._handle_type == 'kd':
-            os.system('. ./image-method.sh ' + '&& cd ' + dst_path + ' && ConvertAllToPng')
+            os.system('. ./image-shell.sh python ' + '&& cd ' + dst_path + ' && ConvertAllToPng')
             messagebox.showinfo(title='提示', message='图片已经保存到图片目录下的 PngFolder 文件夹中')
 
     # 判断图片格式
@@ -148,8 +148,8 @@ class ArchiveHandle:
         # 创建界面
         self.create_ui()
         # 判断 python 文件所在目录有无 shell 脚本
-        if not os.path.isfile("archive-method.sh"):
-            messagebox.showinfo(title='提示', message='请将 archive-method.sh 文件拖到 python 脚本所在目录')
+        if not os.path.isfile("auto-archive.sh"):
+            messagebox.showinfo(title='提示', message='请将 auto-archive.sh 文件拖到 python 脚本所在目录')
             return
 
         # 获取默认值
@@ -157,7 +157,7 @@ class ArchiveHandle:
 
     # 自动获取默认值
     def auto_defalut(self):
-        config_str = ". ./archive-method.sh && echo $g_project_name && echo $g_development_mode " \
+        config_str = ". ./auto-archive.sh python && echo $g_project_name && echo $g_development_mode " \
                      "&& echo $g_scheme_name && echo $g_export_options && echo $g_ipa_path"
         config_proc = subprocess.Popen(config_str, shell=True, stdout=subprocess.PIPE)
         config_out = config_proc.stdout.readlines()
@@ -214,7 +214,7 @@ class ArchiveHandle:
         temp_proj_full_name = os.path.basename(temp_proj_str)
         proj_name, proj_ext = os.path.splitext(temp_proj_full_name)
 
-        scheme_str = ". ./archive-method.sh " + "&& cd " + temp_proj_dir \
+        scheme_str = ". ./auto-archive.sh python " + "&& cd " + temp_proj_dir \
                      + " && FindScheme " + proj_name + " && echo $g_scheme_name"
         scheme_proc = subprocess.Popen(scheme_str, shell=True, stdout=subprocess.PIPE)
         scheme_out = scheme_proc.stdout.readlines()
@@ -228,9 +228,9 @@ class ArchiveHandle:
         field_width = 40
         pad_width = 35
         # 提示
-        tip_label1 = Label(arch_frame, text="提示1：将 dev-shell.py，archive-method.sh 复制到与.xcodeproj同级目录下，\n"
+        tip_label1 = Label(arch_frame, text="提示1：将 dev-shell.py，auto-archive.sh 复制到与.xcodeproj同级目录下，\n"
                                             "            脚本会自动获取工程名称，scheme等信息。", fg='DarkCyan', justify='left')
-        tip_label2 = Label(arch_frame, text="提示2：自动获取不正确请修改或配置 archive-method.sh 中全局变量。", fg='DarkCyan')
+        tip_label2 = Label(arch_frame, text="提示2：自动获取不正确请修改或配置 auto-archive.sh 中全局变量。", fg='DarkCyan')
         tip_label3 = Label(arch_frame, text="提示3：配置文件 ExportOptions.plist 不配置会自动检测创建。", fg='DarkCyan')
         tip_label1.grid(row=0, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
         tip_label2.grid(row=1, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
@@ -306,8 +306,8 @@ class ArchiveHandle:
 
     # 确认按钮
     def sure_btn_click(self):
-        if not os.path.isfile("archive-method.sh"):
-            messagebox.showinfo(title='提示', message='请将 archive-method.sh 文件拖到 python 脚本所在目录')
+        if not os.path.isfile("auto-archive.sh"):
+            messagebox.showinfo(title='提示', message='请将 auto-archive.sh 文件拖到 python 脚本所在目录')
             return
 
         # 读取输入框
@@ -333,14 +333,14 @@ class ArchiveHandle:
         # 判断项目目录下 ExportOptions.plist 是否存在，不存在创建
         expo_path = os.path.join(proj_path, expo_str)
         if not os.path.isfile(expo_path):
-            os.system(". ./archive-method.sh && cd " + proj_path + " && CreateExportOptionsPlist " + expo_str)
+            os.system(". ./auto-archive.sh python && cd " + proj_path + " && CreateExportOptionsPlist " + expo_str)
 
         # BuildWorkspace  BuildProj
         if proj_ext == ".xcworkspace":
-            arch_str = ". ./archive-method.sh && cd " + proj_path + " && BuildWorkspace " + proj_name + " " + mode_str \
+            arch_str = ". ./auto-archive.sh python && cd " + proj_path + " && BuildWorkspace " + proj_name + " " + mode_str \
                        + " " + sche_str + " " + expo_path + " " + ipaf_str + " && echo $g_current_time"
         else:
-            arch_str = ". ./archive-method.sh && cd " + proj_path + " && BuildProj " + proj_name + " " + mode_str \
+            arch_str = ". ./auto-archive.sh python && cd " + proj_path + " && BuildProj " + proj_name + " " + mode_str \
                        + " " + sche_str + " " + expo_path + " " + ipaf_str + " && echo $g_current_time"
 
         arch_proc = subprocess.Popen(arch_str, shell=True, stdout=subprocess.PIPE)
