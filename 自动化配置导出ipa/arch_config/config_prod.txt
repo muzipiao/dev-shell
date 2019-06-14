@@ -1,4 +1,0 @@
-BASE_URL="#define BASE_URL @\"https://aaa.bbb.com:8088\""
-APP_VERSION="#define APP_VERSION @\"4.9.0\""
-PUB_KEY="#define PUB_KEY @\"root_prod\""
-JGID="#define JGID @\"AAAA6CCCC\""

@@ -365,16 +365,66 @@ class ArchiveHandle:
 # ----------------------- App 转 ipa -----------------------
 class AppToIpaHandle:
     def __init__(self, master):
-        ipa_frame = Frame(master)
-        ipa_frame.pack()
+        self._master = master
+        self._frame = Frame(master)
+        self._frame.grid()
+        self._str_var = StringVar()
+        self.create_ui()
+        self.auto_find_app()
 
-        self._quit_btn = Button(ipa_frame, text="a关闭", fg="blue", command=master.destroy)
-        self._quit_btn.pack(side=LEFT)
-        self._hi_btn = Button(ipa_frame, text="Hello", command=self.say_hi)
-        self._hi_btn.pack(side=LEFT)
+    # 在当前脚本目录下搜索
+    def auto_find_app(self):
+        py_dir = os.getcwd()
+        file_list = os.listdir(py_dir)
+        for file_name in file_list:
+            if file_name.endswith('.app'):
+                temp_full_path = os.path.join(py_dir, file_name)
+                self._str_var.set(temp_full_path)
+                break
 
-    def say_hi(self):
-        print("AAAAHi! This is version 2 of 'hello world'")
+    # 创建界面
+    def create_ui(self):
+        app_frame = self._frame
+        field_width = 40
+        pad_width = 35
+        # 提示
+        tip_label = Label(app_frame, text="请选择后缀名为 .app 的文件", fg='DarkCyan')
+        path_label = Label(app_frame, text='项目路径：', fg='black')
+
+        # 选择项目路径按钮
+        self._str_var.set('输入或者选择 .app 文件路径')
+        path_input = Entry(app_frame, textvariable=self._str_var, width=field_width)
+        select_path_btn = Button(app_frame, text='选择文件', command=self.select_path_btn_click)
+        # 提交按钮
+        sure_btn = Button(app_frame, text='确定', command=self.sure_btn_click)
+        # 布局
+        tip_label.grid(row=0, column=0, padx=5, pady=5, rowspan=1, columnspan=3, sticky=W)
+        path_label.grid(row=1, column=0, padx=5, pady=5)
+        path_input.grid(row=1, column=1, padx=5, pady=5)
+        select_path_btn.grid(row=1, column=2, padx=5, pady=5)
+        sure_btn.grid(row=3, column=0, padx=pad_width, pady=pad_width, rowspan=2, columnspan=3, sticky=NSEW)
+
+    # 选择 .app 文件
+    def select_path_btn_click(self):
+        file_path = filedialog.askopenfilename()
+        if len(file_path) > 0:
+            self._str_var.set(file_path)
+
+    def sure_btn_click(self):
+        dst_path = self._str_var.get()
+        # 判断是否是.app 文件
+        if not dst_path.endswith('.app'):
+            messagebox.showinfo(title='提示', message='请选择 .app 文件')
+            return
+
+        if not os.path.isfile("convert-ipa.sh"):
+            messagebox.showinfo(title='提示', message='请将 convert-ipa.sh 文件拖到 python 脚本所在目录')
+            return
+        # 如果选择的是文件，则将文件名称和目录分开
+        file_name = os.path.basename(dst_path)
+        dir_path = os.path.dirname(dst_path)
+        os.system('. ./convert-ipa.sh python ' + '&& cd ' + dir_path + ' && AppToIpa ' + file_name)
+        messagebox.showinfo(title='提示', message='图片已经保存' + dir_path + '/IPAFolder 文件夹中')
 
 
 # ----------------------- App -----------------------

@@ -1,4 +1,0 @@
-BASE_URL="#define BASE_URL @\"https://10.188.88.88:8088\""
-APP_VERSION="#define APP_VERSION @\"4.0.0\""
-PUB_KEY="#define PUB_KEY @\"root\""
-JGID="#define JGID @\"AAAA6BBB\""
