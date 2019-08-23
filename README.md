@@ -62,4 +62,14 @@ XR | 6.1英寸 | 326ppi | 414*896pt | 828*1792px | @2x
 2. JPEG 图片格式，只包含RGB通道颜色，体积小，适合网络传输和打印；而 PNG 图片格式，除了包含RGB颜色外，还包含Alpha透明通道。
 3. PNG 图片格式是苹果官方推荐的格式，因为iOS系统会用到大量的透明效果，而且 PNG 图片支持硬解码，使界面更流畅。
 
+## Shell 一键自动化打包
+
+自动化打包 auto-archive.sh 脚本，会自动读取 .xcodeproj 工程名称、自动读取项目 scheme 名称、自动配置 ExportOptions.plist 文件等。
+
+1. 将 auto-archive.sh 脚本复制到文件后缀名 .xcodeproj 所在项目目录下；
+2. 将 auto-archive.sh 拖入终端，回车即可；
+3. 如果自动打包失败，请打开 auto-archive.sh 配置项目信息；
+4. 脚本会检查 ExportOptions.plist 文件，配置不一致会提示，无次文件脚本会自动创建；
+5. 如果提示 ExportOptions.plist 文件有问题，打包失败时，可删除 ExportOptions.plist，脚本会自动创建。
+
 如果您觉得有所帮助，请在[GitHub](https://github.com/muzipiao/dev-shell)上赏个Star ⭐️，您的鼓励是我前进的动力。

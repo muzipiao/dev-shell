@@ -1,5 +1,6 @@
 #!/bin/sh
-# 打包脚本, 将此脚本放在后缀名为xcodeproj的文件同级目录下即可
+# 打包脚本, 将此脚本放在后缀名为xcodeproj的文件同级目录下，运行脚本即可自动打包
+# 脚本会自动获取 工程名称、scheme、描述文件名称等，若不正确，请手动配置
 
 #工程名称，注意：ExportOptions.plist文件必须放到"工程名.xcodeproj"同级目录下，然后在终端中输入"cd 当前工程名.xcodeproj所在文件路径"，在拖入此Shell脚本即可。
 g_project_name=""
@@ -50,6 +51,41 @@ FindScheme() {
         proj_setting=$(xcodebuild -showBuildSettings)
         s_scheme=$(echo "$proj_setting" | grep TARGET_NAME)
         g_scheme_name=${s_scheme#*= }
+    fi
+}
+
+# 如果导出ipa失败，很可能是ExportOptions.plist文件错误，检查提示
+CheckExportOptionsPlist() {
+    export_plist=$1
+    proj_setting=$(xcodebuild -showBuildSettings)
+    s_identifier=$(echo "$proj_setting" | grep PRODUCT_BUNDLE_IDENTIFIER)
+    k_id=${s_identifier#*= }
+    s_provision=$(echo "$proj_setting" | grep PROVISIONING_PROFILE_SPECIFIER)
+    k_pr=${s_provision#*= }
+    s_team_id=$(echo "$proj_setting" | grep DEVELOPMENT_TEAM)
+    k_te=${s_team_id#*= }
+
+    # 读取 ExportOptions.plist 的值对比
+    p_team=$(/usr/libexec/PlistBuddy -c 'Print :teamID' "$export_plist")
+    prov_key="provisioningProfiles:$k_id"
+    p_prov=$(/usr/libexec/PlistBuddy -c 'Print :'$prov_key'' "$export_plist")
+    # 标记是否有更改
+    diff_config=0
+    # 对比 teamID
+    if [ "$k_te" != "$p_team" ]; then
+        diff_config=1
+        echo "*** 检测到项目配置的teamID与ExportOptions.plist文件中的值不相等 ***"
+        echo "*** 项目teamID为：$k_te  ExportOptions.plist文件teamID为：$p_team"
+    fi
+    # 对比 provisioningProfiles
+    if [ "$k_pr" != "$p_prov" ]; then
+        diff_config=1
+        echo "*** 检测到项目配置的provisioningProfiles与ExportOptions.plist文件中的值不相等 ***"
+        echo "*** 项目配置的provisioningProfiles为：$k_pr ***"
+        echo "*** ExportOptions.plist文件provisioningProfiles为：$p_prov ***"
+    fi
+    if [ "$diff_config" = 1 ]; then
+        echo "*** 若创建ipa失败，请删除ExportOptions.plist文件自动配置，重新运行此脚本 ***"
     fi
 }
 
@@ -104,7 +140,6 @@ BuildProj() {
     proj_mode=$2
     proj_scheme=$3
     proj_export_plist=$4
-    proj_ipa_path=$5
 
     echo "*** 正在清理工程 ***"
     xcodebuild clean  -project "$proj_name".xcodeproj \
@@ -120,11 +155,6 @@ BuildProj() {
     -archivePath build/"$proj_name".xcarchive \
     -destination generic/platform=ios -quiet || exit
     echo "*** 编译完成     ***"
-
-    # 导出ipa
-    echo "*** 正在导出ipa  ***"
-    ArchiveIpa "$proj_name" "$proj_export_plist" "$proj_scheme" "$proj_ipa_path"
-    echo "*** ipa 已导出到目录：$proj_ipa_path"
 }
 
 BuildWorkspace() {
@@ -132,7 +162,6 @@ BuildWorkspace() {
     proj_mode=$2
     proj_scheme=$3
     proj_export_plist=$4
-    proj_ipa_path=$5
 
     echo "*** 正在清理工程 ***"
     xcodebuild clean  -workspace "$proj_name".xcworkspace \
@@ -148,11 +177,6 @@ BuildWorkspace() {
     -archivePath build/"$proj_name".xcarchive \
     -destination generic/platform=ios -quiet || exit
     echo "*** 编译完成     ***"
-
-     # 导出ipa
-    echo "*** 正在导出ipa  ***"
-    ArchiveIpa "$proj_name" "$proj_export_plist" "$proj_scheme" "$proj_ipa_path"
-    echo "*** ipa 已导出到目录：$proj_ipa_path"
 }
 
 # 程序主方法
@@ -175,6 +199,9 @@ Main() {
     if [ ! -f "$g_export_options" ]; then
         echo "*** 未发现ExportOptions.plist文件，自动创建中... ***"
         CreateExportOptionsPlist "$g_export_options"
+    else
+        echo "*** 检查ExportOptions.plist文件配置是否正确 ***"
+        CheckExportOptionsPlist "$g_export_options"
     fi
 
     echo "*** 项目配置信息如下： ***"
@@ -186,14 +213,21 @@ Main() {
     echo "*** 项目配置完毕 ***"
 
     # 获取名称和后缀
-    file_head=${g_project_name%.*}
-    file_last=${g_project_name##*.}
-    if [ "$file_last" = "xcworkspace" ]; then
-        BuildWorkspace "$file_head" "$g_development_mode" "$g_scheme_name" "$g_export_options" "$g_ipa_path"
+    proj_name=${g_project_name%.*}
+    proj_type=${g_project_name##*.}
+
+    # 编译项目
+    if [ "$proj_type" = "xcworkspace" ]; then
+        BuildWorkspace "$proj_name" "$g_development_mode" "$g_scheme_name" "$g_export_options"
     else
-        BuildProj "$file_head" "$g_development_mode" "$g_scheme_name" "$g_export_options" "$g_ipa_path" 
+        BuildProj "$proj_name" "$g_development_mode" "$g_scheme_name" "$g_export_options" 
     fi
 
+    # 编译完成导出ipa
+    echo "*** 正在导出ipa  ***"
+    ArchiveIpa "$proj_name" "$g_export_options" "$g_scheme_name" "$g_ipa_path"
+    echo "*** ipa 已导出到目录：$proj_ipa_path"
+    
     # 绝对路径
     user_path=$(cd ~ && pwd)
     abs_ipa_folder=$(echo ${g_ipa_path/\~/"$user_path"})
