@@ -1,3 +1,6 @@
+'''
+此文件为 Python 界面，执行 python3 dev-shell.py 可查看
+'''
 from tkinter import *
 from tkinter import filedialog, messagebox
 import os, subprocess, imghdr

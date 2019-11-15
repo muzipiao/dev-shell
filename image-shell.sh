@@ -1,7 +1,6 @@
 #!/bin/sh
-#  CreateAppIcon.sh
-#  Created by SuperlightBaby on 2017/4/30.
-#  Copyright © 2017年 SuperlightBaby. All rights reserved.
+# 图片批处理，包含生成 AppIcon、LaunchImage、转 PNG、2x 3x 图片等
+# 将 shell 脚本拖入到图片所在文件夹下，拖入终端运行即可
 
 # 全局的临时变量，储存用户选择
 user_select=""
@@ -12,7 +11,7 @@ lauch_image_name="LaunchImage.png"
 # 默认icon图片名称
 icon_image_name="AppIcon.png"
 
-# --------------------读取文件名或者参数的方法--------------------
+# 读取文件名或者参数的方法
 JudgeFileIsExist() {
 	temp_file_name=$1
 	if [ -f "$temp_file_name" ]; then
@@ -30,7 +29,7 @@ JudgeFileIsExist() {
 	fi
 }
 
-#>>>>>>>>>>>>>>>>>>>>>>>先判断是否是图片,是返回0，否返回-1<<<<<<<<<<<<<<<<<<<<<<<<
+# 先判断是否是图片,是返回0，否返回-1
 JudgeIsImage() {
 	#format string jpeg | tiff | png | gif | jp2 | pict | bmp | qtif | psd | sgi | tga
 	#获取输入的图形文件类型
@@ -47,8 +46,7 @@ JudgeIsImage() {
 	fi
 }
 
-#>>>>>>>>>>>>>>>>>>>>>>>自动生成1x，2x，3x图片<<<<<<<<<<<<<<<<<<<<<<<<
-#自动生成1x，2x，3x图片，只对png图形有效
+# 自动生成2x，3x图片，只对png图形有效
 ScalePic() {
 	#获取文件尺寸，像素值
 	imageHeight=$(sips -g pixelHeight "$1" | awk -F: '{print $2}')
@@ -107,7 +105,6 @@ CreateXXImage() {
 	done
 }
 
-#>>>>>>>>>>>>>>>>>>>>>>>图片转为PNG<<<<<<<<<<<<<<<<<<<<<<<<
 #如果图片不是PNG，则转换为png
 ConvertToPng() {
 	#format string jpeg | tiff | png | gif | jp2 | pict | bmp | qtif | psd | sgi | tga
@@ -154,7 +151,6 @@ ConvertAllToPng() {
 	done
 }
 
-#>>>>>>>>>>>>>>>>>>>>>>>一键生成App图标<<<<<<<<<<<<<<<<<<<<<<<<
 #自动生成icon
 CreateIconImage() {
 	#-Z 等比例按照给定尺寸缩放最长边。
@@ -173,13 +169,8 @@ CreateIconImage() {
 	done
 }
 
-#>>>>>>>>>>>>>>>>>>>>>>>一键生成App启动图片LaunchImage<<<<<<<<<<<<<<<<<<<<<<<<
 #自动生成LaunchImage
 CreateLaunchImage() {
-	#iPhone 6Plus/6SPlus(Retina HD 5.5 @3x): 1242 x 2208
-	#iPhone 6/6S/(Retina HD 4.7 @2x): 750 x 1334
-	#iPhone 5/5S(Retina 4 @2x): 640 x 1136
-	#iPhone 4/4S(@2x): 640 x 960
 	#先删除旧的
 	rm -rf LaunchImageFolder
 	# 再创建CEB文件夹
@@ -236,7 +227,7 @@ Main() {
 	echo "~~~~~~~~~~~~~~~~~~ 输入数字操作(e.g. 输入：1) ~~~~~~~~~~~~~~~"
 	echo "~~~~~~~~~ 1 一键生成AppIcon(图片名称需为AppIcon)      ~~~~~~~~"
 	echo "~~~~~~~~~ 2 一键生成App启动图(图片名称需为LaunchImage) ~~~~~~~~"
-	echo "~~~~~~~~~ 3 一键将所有PNG图片缩放为 2x,3x 图片        ~~~~~~~~"
+	echo "~~~~~~~~~ 3 一键将所有PNG图片缩放为 2x,3x 图片         ~~~~~~~"
 	echo "~~~~~~~~~ 4 一键将所有图片转化为PNG格式                ~~~~~~~~"
 
 	# 读取用户选择
@@ -245,31 +236,21 @@ Main() {
 	method="$user_select"
 	# 判读用户是否有输入
 	if [ -n "$method" ]; then
-		##########################################
-		#一键生成App图标
 		if [ "$method" = "1" ]; then
 			# 判断默认文件是否存在
 			JudgeFileIsExist "$icon_image_name"
 			# 创建 icon 图片
 			CreateIconImage "$global_image_name"
-			##########################################
-			#创建启动页图片
 		elif [ "$method" = "2" ]; then
 			# 判断默认文件是否存在
 			JudgeFileIsExist "$lauch_image_name"
 			# 生成启动图片
 			CreateLaunchImage "$global_image_name"
-			##########################################
-			#自动生成1x，2x，3x图片
 		elif [ "$method" = "3" ]; then
 			# 当前目录下所有图片
 			CreateXXImage
-			##########################################
-			#转换格式
 		elif [ "$method" = "4" ]; then
 			ConvertAllToPng
-			##########################################
-			#参数无效
 		else
 			echo "参数无效，重新输入"
 		fi
