@@ -1,6 +1,12 @@
+#!/usr/bin/env python3
+# coding=UTF-8
+
 '''
-此文件为 Python 界面，执行 python3 dev-shell.py 可查看
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+readme: 此文件为 Python 界面，执行 python3 dev-shell.py 可查看
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
+
 from tkinter import *
 from tkinter import filedialog, messagebox
 import os, subprocess, imghdr

@@ -12,4 +12,5 @@ fi
 
 # 执行 Python 文件
 echo "Python 版本：$py_version"
+chmod 777 dev-shell.py
 python3 dev-shell.py
